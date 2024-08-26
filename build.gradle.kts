@@ -3,7 +3,6 @@ plugins {
     kotlin("plugin.spring") version "1.9.25"
     id("org.springframework.boot") version "3.3.3"
     id("io.spring.dependency-management") version "1.1.6"
-    id("org.springframework.cloud.contract") version "4.1.4"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
 }
 
@@ -46,8 +45,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
-    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-verifier")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.testcontainers:junit-jupiter")
@@ -68,14 +65,7 @@ kotlin {
     }
 }
 
-contracts {
-}
-
 tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
-tasks.contractTest {
     useJUnitPlatform()
 }
 
