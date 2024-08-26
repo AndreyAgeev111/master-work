@@ -16,10 +16,6 @@ import java.util.*
 
 @WebMvcTest
 class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
-    @MockBean
-    private lateinit var productService: ProductService
-    private val mapper = jacksonObjectMapper()
-
     @Test
     fun whenFindProduct_thenReturnProductWithStatus200() {
         val productId = 1
@@ -79,4 +75,8 @@ class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
         mockMvc.perform(post("/api/v1/products").content(mapper.writeValueAsString(product)).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk)
     }
+
+    @MockBean
+    private lateinit var productService: ProductService
+    private val mapper = jacksonObjectMapper()
 }
