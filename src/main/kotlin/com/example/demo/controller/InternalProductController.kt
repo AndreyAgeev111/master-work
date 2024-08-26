@@ -2,7 +2,6 @@ package com.example.demo.controller
 
 import com.example.demo.persistance.model.ProductModel
 import com.example.demo.persistance.service.ProductService
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
