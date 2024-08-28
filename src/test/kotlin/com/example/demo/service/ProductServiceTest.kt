@@ -1,5 +1,6 @@
-package com.example.demo.persistance.service
+package com.example.demo.service
 
+import com.example.demo.kafka.producer.ProductProducer
 import com.example.demo.persistance.model.ProductModel
 import com.example.demo.persistance.repository.ProductRepository
 import org.junit.jupiter.api.Assertions
@@ -93,9 +94,11 @@ class ProductServiceTest {
         val result = productService.upsertProduct(product)
 
         verify(productRepository, atLeastOnce()).save(product)
+        verify(productProducer, atLeastOnce()).sendStringMessage(product.toString())
         Assertions.assertEquals(result, Unit)
     }
 
     private val productRepository: ProductRepository = mock(ProductRepository::class.java)
-    private val productService: ProductService = ProductServiceImpl(productRepository)
+    private val productProducer: ProductProducer = mock(ProductProducer::class.java)
+    private val productService: ProductService = ProductServiceImpl(productRepository, productProducer)
 }
