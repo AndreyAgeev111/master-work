@@ -27,7 +27,7 @@ class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
             description = null
         )
 
-       `when`(productService.findProductById(productId)).thenReturn(Optional.of(product))
+       `when`(productService.getProductById(productId)).thenReturn(product)
 
         mockMvc.perform(get("/api/v1/products/$productId"))
             .andExpect(status().isOk)
@@ -56,7 +56,7 @@ class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
 
         `when`(productService.findProducts()).thenReturn(products)
 
-        mockMvc.perform(get("/api/v1/products"))
+        mockMvc.perform(get("/api/v1/products/all"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().json(jsonProducts))

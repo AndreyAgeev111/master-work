@@ -3,12 +3,13 @@ package com.example.demo.service
 import com.example.demo.kafka.producer.ProductProducer
 import com.example.demo.persistance.model.ProductModel
 import com.example.demo.persistance.repository.ProductRepository
+import com.example.demo.service.exception.ProductNotFoundException
 import org.springframework.stereotype.Service
-import java.util.*
+import kotlin.jvm.optionals.getOrElse
 
 interface ProductService {
     fun findProducts(): List<ProductModel>
-    fun findProductById(id: Int): Optional<ProductModel>
+    fun getProductById(id: Int): ProductModel
     fun upsertProduct(message: ProductModel)
 }
 
@@ -19,7 +20,9 @@ class ProductServiceImpl(
 ) : ProductService {
     override fun findProducts(): List<ProductModel> = db.findAll().toList()
 
-    override fun findProductById(id: Int): Optional<ProductModel> = db.findById(id)
+    override fun getProductById(id: Int): ProductModel = db.findById(id).getOrElse {
+        throw ProductNotFoundException(id)
+    }
 
     override fun upsertProduct(message: ProductModel) {
         db.save(message)
