@@ -49,7 +49,6 @@ class ProductServiceTest {
         Assertions.assertTrue(resultProducts.isEmpty())
     }
 
-
     @Test
     fun whenFindProduct_thenReturnEmptyProduct() {
         val productId = 1
