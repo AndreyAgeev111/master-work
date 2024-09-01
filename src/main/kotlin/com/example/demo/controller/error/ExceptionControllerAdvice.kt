@@ -1,6 +1,6 @@
 package com.example.demo.controller.error
 
-import com.example.demo.controller.model.response.error.ErrorResponse
+import com.example.demo.controller.model.error.ErrorResponse
 import com.example.demo.service.exception.ProductNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

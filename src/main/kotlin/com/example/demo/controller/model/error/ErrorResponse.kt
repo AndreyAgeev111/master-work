@@ -1,4 +1,4 @@
-package com.example.demo.controller.model.response.error
+package com.example.demo.controller.model.error
 
 import io.swagger.v3.oas.annotations.media.Schema
 

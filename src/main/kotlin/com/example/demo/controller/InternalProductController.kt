@@ -1,8 +1,7 @@
 package com.example.demo.controller
 
 import com.example.demo.controller.model.Product
-import com.example.demo.controller.model.response.*
-import com.example.demo.controller.model.response.error.ErrorResponse
+import com.example.demo.controller.model.error.ErrorResponse
 import com.example.demo.persistance.model.ProductModel
 import com.example.demo.service.ProductService
 import io.swagger.v3.oas.annotations.Operation
@@ -15,9 +14,9 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 interface InternalProductController {
-    fun listProducts(): ListProductResponse
-    fun getProductById(id: Int): GetProductResponse
-    fun createProduct(product: Product)
+    fun listProducts(): List<Product>
+    fun getProductById(id: Int): Product
+    fun upsertProduct(product: Product)
 }
 
 @RestController
@@ -31,7 +30,7 @@ class InternalProductControllerImpl(val service: ProductService) : InternalProdu
             ApiResponse(
                 responseCode = "200",
                 description = "OK",
-                content = [Content(schema = Schema(implementation = ListProductResponse::class))]
+                content = [Content(schema = Schema(implementation = Array<Product>::class))]
             ),
             ApiResponse(
                 responseCode = "500",
@@ -40,10 +39,9 @@ class InternalProductControllerImpl(val service: ProductService) : InternalProdu
             )
         ]
     )
-    override fun listProducts(): ListProductResponse =
+    override fun listProducts(): List<Product> =
         service.findProducts()
             .map { Product(it) }
-            .let { ListProductResponse(it) }
 
 
     @GetMapping(path = ["/{id}"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -53,7 +51,7 @@ class InternalProductControllerImpl(val service: ProductService) : InternalProdu
             ApiResponse(
                 responseCode = "200",
                 description = "OK",
-                content = [Content(schema = Schema(implementation = GetProductResponse::class))]
+                content = [Content(schema = Schema(implementation = Product::class))]
             ),
             ApiResponse(
                 responseCode = "422",
@@ -67,8 +65,8 @@ class InternalProductControllerImpl(val service: ProductService) : InternalProdu
             )
         ]
     )
-    override fun getProductById(@PathVariable id: Int): GetProductResponse =
-        GetProductResponse(Product(service.getProductById(id)))
+    override fun getProductById(@PathVariable id: Int): Product =
+        Product(service.getProductById(id))
 
 
     @PostMapping(path = [""], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -88,7 +86,7 @@ class InternalProductControllerImpl(val service: ProductService) : InternalProdu
             )
         ]
     )
-    override fun createProduct(@RequestBody(required = true) product: Product) {
+    override fun upsertProduct(@RequestBody(required = true) product: Product) {
         service.upsertProduct(ProductModel(product))
     }
 }

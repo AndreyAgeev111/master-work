@@ -17,7 +17,7 @@ import java.util.*
 @WebMvcTest
 class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
     @Test
-    fun whenFindProduct_thenReturnProductWithStatus200() {
+    fun whenGetProduct_thenReturnProductWithStatus200() {
         val productId = 1
         val product = ProductModel(
             id = productId,
@@ -27,7 +27,7 @@ class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
             description = null
         )
 
-       `when`(productService.getProductById(productId)).thenReturn(product)
+        `when`(productService.getProductById(productId)).thenReturn(product)
 
         mockMvc.perform(get("/api/v1/products/$productId"))
             .andExpect(status().isOk)
@@ -72,7 +72,11 @@ class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
             description = null
         )
 
-        mockMvc.perform(post("/api/v1/products").content(mapper.writeValueAsString(product)).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+            post("/api/v1/products")
+                .content(mapper.writeValueAsString(product))
+                .contentType(MediaType.APPLICATION_JSON)
+        )
             .andExpect(status().isOk)
     }
 

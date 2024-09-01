@@ -4,6 +4,7 @@ import com.example.demo.kafka.producer.ProductProducer
 import com.example.demo.persistance.model.ProductModel
 import com.example.demo.persistance.repository.ProductRepository
 import com.example.demo.service.exception.ProductNotFoundException
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrElse
 
@@ -21,6 +22,7 @@ class ProductServiceImpl(
     override fun findProducts(): List<ProductModel> = db.findAll().toList()
 
     override fun getProductById(id: Int): ProductModel = db.findById(id).getOrElse {
+        logger.error("Product with id $id was not found")
         throw ProductNotFoundException(id)
     }
 
@@ -28,4 +30,6 @@ class ProductServiceImpl(
         db.save(message)
         productProducer.sendStringMessage(message.toString())
     }
+
+    private val logger = LoggerFactory.getLogger(this.javaClass)
 }

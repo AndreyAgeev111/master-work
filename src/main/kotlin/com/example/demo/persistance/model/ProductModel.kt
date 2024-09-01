@@ -12,7 +12,7 @@ data class ProductModel(
     val isAvailable: Boolean?,
     val description: String?
 ) {
-    constructor(product: Product) : this (
+    constructor(product: Product) : this(
         id = product.id,
         name = product.name,
         price = product.price,
