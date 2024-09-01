@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 class ExceptionControllerAdvice {
 
     @ExceptionHandler
-    fun handleIllegalStateException(ex: ProductNotFoundException): ResponseEntity<ErrorResponse> {
+    fun handleProductNotFoundException(ex: ProductNotFoundException): ResponseEntity<ErrorResponse> {
         return ResponseEntity(ErrorResponse(ex.message), HttpStatus.UNPROCESSABLE_ENTITY)
     }
 }
