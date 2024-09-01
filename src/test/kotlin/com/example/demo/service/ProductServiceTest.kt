@@ -3,6 +3,7 @@ package com.example.demo.service
 import com.example.demo.kafka.producer.ProductProducer
 import com.example.demo.persistance.model.ProductModel
 import com.example.demo.persistance.repository.ProductRepository
+import com.example.demo.service.exception.ProductNotFoundException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
@@ -56,10 +57,9 @@ class ProductServiceTest {
 
         `when`(productRepository.findById(productId)).thenReturn(emptyProduct)
 
-        val resultProduct: Optional<ProductModel> = productService.findProductById(productId)
-
-        verify(productRepository, atLeastOnce()).findById(productId)
-        Assertions.assertEquals(resultProduct, emptyProduct)
+        Assertions.assertThrows(ProductNotFoundException::class.java) {
+            productService.getProductById(productId)
+        }
     }
 
     @Test
@@ -75,10 +75,10 @@ class ProductServiceTest {
 
         `when`(productRepository.findById(productId)).thenReturn(Optional.of(product))
 
-        val resultProduct: Optional<ProductModel> = productService.findProductById(productId)
+        val resultProduct: ProductModel = productService.getProductById(productId)
 
         verify(productRepository, atLeastOnce()).findById(productId)
-        Assertions.assertEquals(resultProduct.get().name, product.name)
+        Assertions.assertEquals(resultProduct.name, product.name)
     }
 
     @Test
