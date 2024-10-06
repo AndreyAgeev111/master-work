@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathTemplate": "/api/v1/warehouse/{id}"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {},
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

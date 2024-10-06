@@ -148,6 +148,7 @@ class ProductServiceTest {
         }
     }
 
+
     private val productRepository: ProductRepository = mock(ProductRepository::class.java)
     private val productProducer: ProductProducer = mock(ProductProducer::class.java)
     private val productService: ProductService = ProductServiceImpl(productRepository, productProducer)

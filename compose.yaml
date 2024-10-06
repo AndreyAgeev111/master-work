@@ -7,6 +7,14 @@ services:
       - POSTGRES_USER=myuser
     ports:
       - 5432:5432
+  wiremock:
+    image: wiremock/wiremock:latest
+    volumes:
+      - type: bind
+        source: ./wiremock/warehouse
+        target: /home/wiremock/mappings
+    ports:
+      - 8443:8080
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
