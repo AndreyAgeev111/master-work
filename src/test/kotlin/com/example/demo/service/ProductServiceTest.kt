@@ -3,6 +3,7 @@ package com.example.demo.service
 import com.example.demo.kafka.producer.ProductProducer
 import com.example.demo.persistance.model.ProductModel
 import com.example.demo.persistance.repository.ProductRepository
+import com.example.demo.service.exception.ProductAlreadyReservedException
 import com.example.demo.service.exception.ProductNotFoundException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -93,8 +94,58 @@ class ProductServiceTest {
         val result = productService.upsertProduct(product)
 
         verify(productRepository, atLeastOnce()).save(product)
-        verify(productProducer, atLeastOnce()).sendStringMessage(product.toString())
         Assertions.assertEquals(result, Unit)
+    }
+
+    @Test
+    fun whenReserveProduct_thenReturnNothing() {
+        val productId = 1
+        val product = ProductModel(
+            id = productId,
+            name = UUID.randomUUID().toString(),
+            price = 100,
+            isAvailable = false,
+            description = null
+        )
+
+        `when`(productRepository.findById(productId)).thenReturn(Optional.of(product))
+
+        val result = productService.reserveProduct(productId)
+
+        verify(productRepository, atLeastOnce()).findById(productId)
+        verify(productRepository, atLeastOnce()).save(product.copy(isAvailable = true))
+        verify(productProducer, atLeastOnce()).sendProductReservedEvent(productId)
+        Assertions.assertEquals(result, Unit)
+    }
+
+    @Test
+    fun whenReserveProduct_thenFindProduct_thenReturnEmptyProduct() {
+        val productId = 1
+        val emptyProduct = Optional.empty<ProductModel>()
+
+        `when`(productRepository.findById(productId)).thenReturn(emptyProduct)
+
+        Assertions.assertThrows(ProductNotFoundException::class.java) {
+            productService.reserveProduct(productId)
+        }
+    }
+
+    @Test
+    fun whenReserveProduct_thenFindProduct_thenReturnAlreadyReservedProduct() {
+        val productId = 1
+        val product = ProductModel(
+            id = productId,
+            name = UUID.randomUUID().toString(),
+            price = 100,
+            isAvailable = true,
+            description = null
+        )
+
+        `when`(productRepository.findById(productId)).thenReturn(Optional.of(product))
+
+        Assertions.assertThrows(ProductAlreadyReservedException::class.java) {
+            productService.reserveProduct(productId)
+        }
     }
 
     private val productRepository: ProductRepository = mock(ProductRepository::class.java)

@@ -80,6 +80,17 @@ class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
             .andExpect(status().isOk)
     }
 
+    @Test
+    fun whenReserveProduct_thenReturnProductWithStatus200() {
+        val productId = 1
+
+        mockMvc.perform(
+            post("/api/v1/products/$productId/reserve")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+    }
+
     @MockBean
     private lateinit var productService: ProductService
     private val mapper = jacksonObjectMapper()

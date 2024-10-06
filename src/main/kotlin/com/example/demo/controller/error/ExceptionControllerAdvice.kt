@@ -1,6 +1,7 @@
 package com.example.demo.controller.error
 
 import com.example.demo.controller.model.error.ErrorResponse
+import com.example.demo.service.exception.ProductAlreadyReservedException
 import com.example.demo.service.exception.ProductNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,5 +14,10 @@ class ExceptionControllerAdvice {
     @ExceptionHandler
     fun handleProductNotFoundException(ex: ProductNotFoundException): ResponseEntity<ErrorResponse> {
         return ResponseEntity(ErrorResponse(ex.message), HttpStatus.UNPROCESSABLE_ENTITY)
+    }
+
+    @ExceptionHandler
+    fun handleProductAlreadyReservedException(ex: ProductAlreadyReservedException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity(ErrorResponse(ex.message), HttpStatus.BAD_REQUEST)
     }
 }

@@ -17,6 +17,7 @@ interface InternalProductController {
     fun listProducts(): List<Product>
     fun getProductById(id: Int): Product
     fun upsertProduct(product: Product)
+    fun reserveProduct(id: Int)
 }
 
 @RestController
@@ -88,5 +89,31 @@ class InternalProductControllerImpl(val service: ProductService) : InternalProdu
     )
     override fun upsertProduct(@RequestBody(required = true) product: Product) {
         service.upsertProduct(ProductModel(product))
+    }
+
+    @PostMapping(path = ["/{id}/reserve"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Operation(description = "Reserve product by id")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "OK", content = [Content()]),
+            ApiResponse(
+                responseCode = "400",
+                description = "Product has already been reserved",
+                content = [Content()]
+            ),
+            ApiResponse(
+                responseCode = "422",
+                description = "Product was not found",
+                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal error",
+                content = [Content(schema = Schema())]
+            )
+        ]
+    )
+    override fun reserveProduct(@PathVariable id: Int) {
+        service.reserveProduct(id)
     }
 }

@@ -3,6 +3,7 @@ package com.example.demo.service
 import com.example.demo.kafka.producer.ProductProducer
 import com.example.demo.persistance.model.ProductModel
 import com.example.demo.persistance.repository.ProductRepository
+import com.example.demo.service.exception.ProductAlreadyReservedException
 import com.example.demo.service.exception.ProductNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -11,7 +12,8 @@ import kotlin.jvm.optionals.getOrElse
 interface ProductService {
     fun findProducts(): List<ProductModel>
     fun getProductById(id: Int): ProductModel
-    fun upsertProduct(message: ProductModel)
+    fun upsertProduct(product: ProductModel)
+    fun reserveProduct(id: Int)
 }
 
 @Service("productService")
@@ -21,14 +23,27 @@ class ProductServiceImpl(
 ) : ProductService {
     override fun findProducts(): List<ProductModel> = db.findAll().toList()
 
-    override fun getProductById(id: Int): ProductModel = db.findById(id).getOrElse {
-        logger.error("Product with id $id was not found")
-        throw ProductNotFoundException(id)
+    override fun getProductById(id: Int): ProductModel = getProduct(id)
+
+    override fun upsertProduct(product: ProductModel) {
+        db.save(product)
     }
 
-    override fun upsertProduct(message: ProductModel) {
-        db.save(message)
-        productProducer.sendStringMessage(message.toString())
+    override fun reserveProduct(id: Int) {
+        getProduct(id)
+            .also {
+                if (it.isAvailable!!) {
+                    logger.error("Product with id $id has already been reserved")
+                    throw ProductAlreadyReservedException(id)
+                }
+            }
+            .let { db.save(it.copy(isAvailable = true)) }
+        productProducer.sendProductReservedEvent(id)
+    }
+
+    private fun getProduct(id: Int): ProductModel = db.findById(id).getOrElse {
+        logger.error("Product with id $id was not found")
+        throw ProductNotFoundException(id)
     }
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
