@@ -1,6 +1,6 @@
 package com.example.demo.controller.model
 
-import com.example.demo.persistance.model.ProductModel
+import com.example.demo.persistence.model.ProductModel
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "Model for product")

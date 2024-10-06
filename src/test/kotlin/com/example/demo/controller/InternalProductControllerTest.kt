@@ -1,6 +1,6 @@
 package com.example.demo.controller
 
-import com.example.demo.persistance.model.ProductModel
+import com.example.demo.persistence.model.ProductModel
 import com.example.demo.service.ProductService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

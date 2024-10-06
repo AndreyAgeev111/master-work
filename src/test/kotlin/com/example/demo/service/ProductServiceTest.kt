@@ -1,8 +1,8 @@
 package com.example.demo.service
 
 import com.example.demo.kafka.producer.ProductProducer
-import com.example.demo.persistance.model.ProductModel
-import com.example.demo.persistance.repository.ProductRepository
+import com.example.demo.persistence.model.ProductModel
+import com.example.demo.persistence.repository.ProductRepository
 import com.example.demo.service.exception.ProductAlreadyReservedException
 import com.example.demo.service.exception.ProductNotFoundException
 import org.junit.jupiter.api.Assertions

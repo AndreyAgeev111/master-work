@@ -2,7 +2,7 @@ package com.example.demo.controller
 
 import com.example.demo.controller.model.Product
 import com.example.demo.controller.model.error.ErrorResponse
-import com.example.demo.persistance.model.ProductModel
+import com.example.demo.persistence.model.ProductModel
 import com.example.demo.service.ProductService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content

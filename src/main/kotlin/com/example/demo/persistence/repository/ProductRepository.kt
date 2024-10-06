@@ -1,6 +1,6 @@
-package com.example.demo.persistance.repository
+package com.example.demo.persistence.repository
 
-import com.example.demo.persistance.model.ProductModel
+import com.example.demo.persistence.model.ProductModel
 import org.springframework.data.repository.CrudRepository
 
 interface ProductRepository : CrudRepository<ProductModel, Int>

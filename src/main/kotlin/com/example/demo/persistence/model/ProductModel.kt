@@ -1,4 +1,4 @@
-package com.example.demo.persistance.model
+package com.example.demo.persistence.model
 
 import com.example.demo.controller.model.Product
 import org.springframework.data.annotation.Id
