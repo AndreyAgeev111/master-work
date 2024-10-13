@@ -114,7 +114,6 @@ class ProductServiceTest {
 
         verify(productRepository, atLeastOnce()).findById(productId)
         verify(productRepository, atLeastOnce()).save(product.copy(isAvailable = false))
-        verify(productProducer, atLeastOnce())
         Assertions.assertEquals(result, Unit)
     }
 
