@@ -1,6 +1,5 @@
 package com.example.demo.kafka.consumer
 
-import com.example.demo.kafka.config.ProductConfiguration
 import com.example.demo.kafka.consumer.common.KafkaConsumer
 import com.example.demo.kafka.consumer.service.ProductConsumerService
 import com.example.demo.kafka.model.ProductReserveEvent

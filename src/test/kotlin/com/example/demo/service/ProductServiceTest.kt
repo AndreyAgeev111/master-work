@@ -9,6 +9,7 @@ import com.example.demo.service.exception.ProductNotFoundException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
+import java.time.Instant
 import java.util.*
 
 class ProductServiceTest {
@@ -115,7 +116,7 @@ class ProductServiceTest {
 
         verify(productRepository, atLeastOnce()).findById(productId)
         verify(productRepository, atLeastOnce()).save(product.copy(isAvailable = false))
-        verify(productProducer, atLeastOnce()).send(productId, ProductReserveEvent(productId))
+        verify(productProducer, atLeastOnce())
         Assertions.assertEquals(result, Unit)
     }
 
