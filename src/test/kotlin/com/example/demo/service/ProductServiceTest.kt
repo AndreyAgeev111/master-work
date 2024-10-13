@@ -1,6 +1,5 @@
 package com.example.demo.service
 
-import com.example.demo.kafka.model.ProductReserveEvent
 import com.example.demo.kafka.producer.ProductProducer
 import com.example.demo.persistence.model.ProductModel
 import com.example.demo.persistence.repository.ProductRepository
@@ -9,7 +8,6 @@ import com.example.demo.service.exception.ProductNotFoundException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
-import java.time.Instant
 import java.util.*
 
 class ProductServiceTest {
