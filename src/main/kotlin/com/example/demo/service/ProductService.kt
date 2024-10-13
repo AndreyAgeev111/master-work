@@ -32,12 +32,12 @@ class ProductServiceImpl(
     override fun reserveProduct(id: Int) {
         getProduct(id)
             .also {
-                if (it.isAvailable!!) {
+                if (!it.isAvailable!!) {
                     logger.error("Product with id $id has already been reserved")
                     throw ProductAlreadyReservedException(id)
                 }
             }
-            .let { db.save(it.copy(isAvailable = true)) }
+            .let { db.save(it.copy(isAvailable = false)) }
         productProducer.sendProductReservedEvent(id)
     }
 

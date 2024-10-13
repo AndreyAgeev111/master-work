@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPattern": "/api/v1/warehouse/.*3.*"
+  },
+  "response": {
+    "status": 500,
+    "jsonBody": {
+      "error": "Unexpected error. Try later"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

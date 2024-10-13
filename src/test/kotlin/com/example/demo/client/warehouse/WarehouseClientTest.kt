@@ -46,7 +46,7 @@ class WarehouseClientTest {
         val productUpdateRequest = ProductUpdateRequest(
             name = null,
             price = null,
-            isAvailable = true,
+            isAvailable = false,
             description = null,
             updateDate = date
         )

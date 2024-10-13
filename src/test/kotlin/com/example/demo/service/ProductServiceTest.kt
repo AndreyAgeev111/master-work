@@ -104,7 +104,7 @@ class ProductServiceTest {
             id = productId,
             name = UUID.randomUUID().toString(),
             price = 100,
-            isAvailable = false,
+            isAvailable = true,
             description = null
         )
 
@@ -113,7 +113,7 @@ class ProductServiceTest {
         val result = productService.reserveProduct(productId)
 
         verify(productRepository, atLeastOnce()).findById(productId)
-        verify(productRepository, atLeastOnce()).save(product.copy(isAvailable = true))
+        verify(productRepository, atLeastOnce()).save(product.copy(isAvailable = false))
         verify(productProducer, atLeastOnce()).sendProductReservedEvent(productId)
         Assertions.assertEquals(result, Unit)
     }
@@ -137,7 +137,7 @@ class ProductServiceTest {
             id = productId,
             name = UUID.randomUUID().toString(),
             price = 100,
-            isAvailable = true,
+            isAvailable = false,
             description = null
         )
 

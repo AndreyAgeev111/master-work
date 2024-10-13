@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "urlPathTemplate": "/api/v1/warehouse/{id}"
+    "urlPattern": "/api/v1/warehouse/[^3]"
   },
   "response": {
     "status": 200,
