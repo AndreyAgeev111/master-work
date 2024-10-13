@@ -1,5 +1,6 @@
 package com.example.demo.service
 
+import com.example.demo.kafka.model.ProductReserveEvent
 import com.example.demo.kafka.producer.ProductProducer
 import com.example.demo.persistence.model.ProductModel
 import com.example.demo.persistence.repository.ProductRepository
@@ -114,7 +115,7 @@ class ProductServiceTest {
 
         verify(productRepository, atLeastOnce()).findById(productId)
         verify(productRepository, atLeastOnce()).save(product.copy(isAvailable = false))
-        verify(productProducer, atLeastOnce()).sendProductReservedEvent(productId)
+        verify(productProducer, atLeastOnce()).send(productId, ProductReserveEvent(productId))
         Assertions.assertEquals(result, Unit)
     }
 

@@ -1,5 +1,6 @@
 package com.example.demo.service
 
+import com.example.demo.kafka.model.ProductReserveEvent
 import com.example.demo.kafka.producer.ProductProducer
 import com.example.demo.persistence.model.ProductModel
 import com.example.demo.persistence.repository.ProductRepository
@@ -38,7 +39,7 @@ class ProductServiceImpl(
                 }
             }
             .let { db.save(it.copy(isAvailable = false)) }
-        productProducer.sendProductReservedEvent(id)
+        productProducer.send(id, ProductReserveEvent(id))
     }
 
     private fun getProduct(id: Int): ProductModel = db.findById(id).getOrElse {
