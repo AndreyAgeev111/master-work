@@ -29,6 +29,7 @@ extra["snippetsDir"] = file("build/generated-snippets")
 extra["springCloudVersion"] = "2023.0.3"
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-quartz")

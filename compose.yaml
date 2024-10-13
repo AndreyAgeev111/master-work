@@ -15,6 +15,17 @@ services:
         target: /home/wiremock/mappings
     ports:
       - 8443:8080
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - type: bind
+        source: ./prometheus/prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
