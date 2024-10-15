@@ -26,6 +26,23 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - type: bind
+        source: ./grafana/provisioning/datasources
+        target: /etc/grafana/provisioning/datasources
+      - type: bind
+        source: ./grafana/provisioning/dashboards
+        target: /etc/grafana/provisioning/dashboards
+      - type: bind
+        source: ./grafana/dashboards
+        target: /var/lib/grafana/dashboards
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:

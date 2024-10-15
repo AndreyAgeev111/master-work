@@ -12,8 +12,6 @@ class ProductProducer(
     productKafkaTemplate: KafkaTemplate<Int, ProductReserveEvent>,
     productConfiguration: ProductConfiguration,
     meterRegistry: MeterRegistry
-) : KafkaProducer<Int, ProductReserveEvent>(productKafkaTemplate) {
+) : KafkaProducer<Int, ProductReserveEvent>(productKafkaTemplate, meterRegistry) {
     override val topic: String = productConfiguration.topic
-
-    override val sentEventsCounter = meterRegistry.counter("kafka_product_reserved_event_sent")
 }
