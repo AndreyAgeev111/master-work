@@ -6,7 +6,7 @@ import org.springframework.data.relational.core.mapping.Table
 
 @Table("products")
 data class ProductModel(
-    @Id var id: Int?,
+    @Id val id: Int,
     val name: String,
     val price: Int,
     val isAvailable: Boolean?,

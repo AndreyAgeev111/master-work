@@ -1,6 +1,6 @@
 package com.example.demo.persistence.repository
 
-import com.example.demo.persistence.model.ProductModel
+import com.example.demo.persistence.model.DeadLetterEventModel
 import org.springframework.data.jdbc.repository.query.Modifying
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.repository.CrudRepository
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
 @Repository
-interface ProductRepository : CrudRepository<ProductModel, Int> {
+interface DeadLetterEventRepository : CrudRepository<DeadLetterEventModel, Int> {
     @Modifying
     @Transactional
-    @Query("INSERT INTO products VALUES (:#{#product.id}, :#{#product.name}, :#{#product.price}, :#{#product.isAvailable}, :#{#product.description})")
-    fun insert(@Param("product") product: ProductModel)
+    @Query("INSERT INTO dead_letter_events VALUES (:#{#event.id}, :#{#event.payload}, :#{#event.createDate}, :#{#event.updateDate}, :#{#event.currentAttempt})")
+    fun insert(@Param("event") event: DeadLetterEventModel)
 }

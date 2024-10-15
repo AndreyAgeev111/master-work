@@ -22,14 +22,14 @@ class ProductRepositoryTest {
     @Test
     fun whenFindAllProducts_returnsListOfProductsInDatabase() {
         val expectedProduct = ProductModel(
-            id = null,
+            id = 1,
             name = UUID.randomUUID().toString(),
             price = 100,
             isAvailable = true,
             description = null
         )
 
-        productRepository.save(expectedProduct)
+        productRepository.insert(expectedProduct)
         val product = productRepository.findAll().find { it.id == 1 }
         productRepository.deleteAll()
 
@@ -41,34 +41,32 @@ class ProductRepositoryTest {
     @Test
     fun whenFindProductById_returnsProductById() {
         val expectedProduct = ProductModel(
-            id = null,
+            id = 1,
             name = UUID.randomUUID().toString(),
             price = 100,
             isAvailable = true,
             description = null
         )
 
-        productRepository.save(expectedProduct)
+        productRepository.insert(expectedProduct)
         val expectedProductId = productRepository.findAll().iterator().next().id
-        val product = expectedProductId?.let { productRepository.findById(it).get() }
+        val product = productRepository.findById(expectedProductId ).get()
         productRepository.deleteAll()
 
-        if (product != null) {
-            Assertions.assertEquals(product.name, expectedProduct.name)
-        }
+        Assertions.assertEquals(product.name, expectedProduct.name)
     }
 
     @Test
     fun whenSaveProduct_thenProductIsSaved() {
         val firstExpectedProduct = ProductModel(
-            id = null,
+            id = 1,
             name = UUID.randomUUID().toString(),
             price = 100,
             isAvailable = true,
             description = null
         )
 
-        productRepository.save(firstExpectedProduct)
+        productRepository.insert(firstExpectedProduct)
         val expectedProductId = productRepository.findAll().iterator().next().id
 
         val secondExpectedProduct = ProductModel(

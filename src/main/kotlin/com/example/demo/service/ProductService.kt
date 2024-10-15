@@ -8,6 +8,7 @@ import com.example.demo.service.exception.ProductAlreadyReservedException
 import com.example.demo.service.exception.ProductNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrElse
 
 interface ProductService {
@@ -26,8 +27,12 @@ class ProductServiceImpl(
 
     override fun getProductById(id: Int): ProductModel = getProduct(id)
 
+    @Transactional
     override fun upsertProduct(product: ProductModel) {
-        db.save(product)
+        db.findById(product.id).ifPresentOrElse(
+            { db.save(product) },
+            { db.insert(product) }
+        )
     }
 
     override fun reserveProduct(id: Int) {
