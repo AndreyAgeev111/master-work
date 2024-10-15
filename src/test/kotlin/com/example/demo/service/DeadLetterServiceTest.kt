@@ -24,7 +24,7 @@ class DeadLetterServiceTest {
     }
 
     @Test
-    fun whenGetProduct_thenReturnProduct() {
+    fun whenGetEvent_thenReturnEvent() {
         val eventId = 1
         val event = DeadLetterEventModel(
             id = 1,
@@ -43,7 +43,7 @@ class DeadLetterServiceTest {
     }
 
     @Test
-    fun whenUpsertProduct_thenReturnNothing() {
+    fun whenUpsertEvent_thenReturnNothing() {
         val event = DeadLetterEventModel(
             id = 1,
             payload = "a",

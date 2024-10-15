@@ -51,7 +51,7 @@ class ProductServiceTest {
     }
 
     @Test
-    fun whenFindProduct_thenReturnEmptyProduct() {
+    fun whenGetProduct_thenThrowException() {
         val productId = 1
         val emptyProduct = Optional.empty<ProductModel>()
 
@@ -63,7 +63,7 @@ class ProductServiceTest {
     }
 
     @Test
-    fun whenFindProduct_thenReturnProduct() {
+    fun whenGetProduct_thenReturnProduct() {
         val productId = 1
         val product = ProductModel(
             id = productId,
@@ -90,6 +90,8 @@ class ProductServiceTest {
             isAvailable = true,
             description = null
         )
+
+        `when`(productRepository.findById(product.id)).thenReturn(Optional.of(product))
 
         val result = productService.upsertProduct(product)
 
