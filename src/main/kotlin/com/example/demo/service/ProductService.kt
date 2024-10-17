@@ -1,5 +1,6 @@
 package com.example.demo.service
 
+import com.example.demo.controller.model.Product
 import com.example.demo.kafka.model.ProductReserveEvent
 import com.example.demo.kafka.producer.ProductProducer
 import com.example.demo.persistence.model.ProductModel
@@ -8,13 +9,14 @@ import com.example.demo.service.exception.ProductAlreadyReservedException
 import com.example.demo.service.exception.ProductNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrElse
 
 interface ProductService {
-    fun findProducts(): List<ProductModel>
-    fun getProductById(id: Int): ProductModel
-    fun upsertProduct(product: ProductModel)
+    fun listProducts(): List<Product>
+    fun getProductById(id: Int): Product
+    fun upsertProduct(product: Product)
     fun reserveProduct(id: Int)
 }
 
@@ -23,15 +25,15 @@ class ProductServiceImpl(
     val db: ProductRepository,
     val productProducer: ProductProducer
 ) : ProductService {
-    override fun findProducts(): List<ProductModel> = db.findAll().toList()
+    override fun listProducts(): List<Product> = db.findAll().toList().map { Product(it) }
 
-    override fun getProductById(id: Int): ProductModel = getProduct(id)
+    override fun getProductById(id: Int): Product = Product(getProduct(id))
 
-    @Transactional
-    override fun upsertProduct(product: ProductModel) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    override fun upsertProduct(product: Product) {
         db.findById(product.id).ifPresentOrElse(
-            { db.save(product) },
-            { db.insert(product) }
+            { db.save(ProductModel(product)) },
+            { db.insert(ProductModel(product)) }
         )
     }
 

@@ -1,5 +1,6 @@
 package com.example.demo.service
 
+import com.example.demo.controller.model.Product
 import com.example.demo.kafka.producer.ProductProducer
 import com.example.demo.persistence.model.ProductModel
 import com.example.demo.persistence.repository.ProductRepository
@@ -31,7 +32,7 @@ class ProductServiceTest {
 
         `when`(productRepository.findAll()).thenReturn(products)
 
-        val resultProducts: List<ProductModel> = productService.findProducts()
+        val resultProducts: List<Product> = productService.listProducts()
 
         verify(productRepository, atLeastOnce()).findAll()
         Assertions.assertEquals(resultProducts.size, products.size)
@@ -44,7 +45,7 @@ class ProductServiceTest {
 
         `when`(productRepository.findAll()).thenReturn(products)
 
-        val resultProducts: List<ProductModel> = productService.findProducts()
+        val resultProducts: List<Product> = productService.listProducts()
 
         verify(productRepository, atLeastOnce()).findAll()
         Assertions.assertTrue(resultProducts.isEmpty())
@@ -75,7 +76,7 @@ class ProductServiceTest {
 
         `when`(productRepository.findById(productId)).thenReturn(Optional.of(product))
 
-        val resultProduct: ProductModel = productService.getProductById(productId)
+        val resultProduct: Product = productService.getProductById(productId)
 
         verify(productRepository, atLeastOnce()).findById(productId)
         Assertions.assertEquals(resultProduct.name, product.name)
@@ -93,7 +94,7 @@ class ProductServiceTest {
 
         `when`(productRepository.findById(product.id)).thenReturn(Optional.of(product))
 
-        val result = productService.upsertProduct(product)
+        val result = productService.upsertProduct(Product(product))
 
         verify(productRepository, atLeastOnce()).save(product)
         Assertions.assertEquals(result, Unit)

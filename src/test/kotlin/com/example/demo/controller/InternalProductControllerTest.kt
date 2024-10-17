@@ -1,5 +1,6 @@
 package com.example.demo.controller
 
+import com.example.demo.controller.model.Product
 import com.example.demo.persistence.model.ProductModel
 import com.example.demo.service.ProductService
 import org.junit.jupiter.api.Test
@@ -27,7 +28,7 @@ class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
             description = null
         )
 
-        `when`(productService.getProductById(productId)).thenReturn(product)
+        `when`(productService.getProductById(productId)).thenReturn(Product(product))
 
         mockMvc.perform(get("/api/v1/products/$productId"))
             .andExpect(status().isOk)
@@ -54,7 +55,7 @@ class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
         val products = listOf(productFirst, productSecond)
         val jsonProducts = mapper.writeValueAsString(products)
 
-        `when`(productService.findProducts()).thenReturn(products)
+        `when`(productService.listProducts()).thenReturn(products.map { Product(it) })
 
         mockMvc.perform(get("/api/v1/products/all"))
             .andExpect(status().isOk)

@@ -3,10 +3,11 @@ package com.example.demo.service
 import com.example.demo.persistence.model.DeadLetterEventModel
 import com.example.demo.persistence.repository.DeadLetterEventRepository
 import com.example.demo.service.exception.EventNotFoundException
+import com.example.demo.service.model.DeadLetterEvent
+import io.micrometer.core.instrument.MeterRegistry
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
-import java.sql.Timestamp
 import java.time.Instant
 import java.util.*
 
@@ -26,17 +27,19 @@ class DeadLetterServiceTest {
     @Test
     fun whenGetEvent_thenReturnEvent() {
         val eventId = 1
-        val event = DeadLetterEventModel(
+        val currentDate = Instant.now()
+        val event = DeadLetterEvent(
             id = 1,
             payload = "a",
-            createDate = Timestamp.from(Instant.now()),
-            updateDate = Timestamp.from(Instant.now()),
+            createDate = currentDate,
+            updateDate = currentDate,
             currentAttempt = 1
         )
+        val model = DeadLetterEventModel(event)
 
-        `when`(deadLetterEventRepository.findById(eventId)).thenReturn(Optional.of(event))
+        `when`(deadLetterEventRepository.findById(eventId)).thenReturn(Optional.of(model))
 
-        val resultEvent: DeadLetterEventModel = deadLetterEventService.getEventById(eventId)
+        val resultEvent: DeadLetterEvent = deadLetterEventService.getEventById(eventId)
 
         verify(deadLetterEventRepository, atLeastOnce()).findById(eventId)
         Assertions.assertEquals(resultEvent.currentAttempt, event.currentAttempt)
@@ -44,22 +47,25 @@ class DeadLetterServiceTest {
 
     @Test
     fun whenUpsertEvent_thenReturnNothing() {
-        val event = DeadLetterEventModel(
+        val currentDate = Instant.now()
+        val event = DeadLetterEvent(
             id = 1,
             payload = "a",
-            createDate = Timestamp.from(Instant.now()),
-            updateDate = Timestamp.from(Instant.now()),
+            createDate = currentDate,
+            updateDate = currentDate,
             currentAttempt = 1
         )
+        val model = DeadLetterEventModel(event)
 
-        `when`(deadLetterEventRepository.findById(event.id)).thenReturn(Optional.of(event))
+        `when`(deadLetterEventRepository.findById(event.id)).thenReturn(Optional.of(model))
 
         val result = deadLetterEventService.upsertEvent(event)
 
-        verify(deadLetterEventRepository, atLeastOnce()).save(event)
+        verify(deadLetterEventRepository, atLeastOnce()).save(model)
         Assertions.assertEquals(result, Unit)
     }
 
     private val deadLetterEventRepository: DeadLetterEventRepository = mock(DeadLetterEventRepository::class.java)
-    private val deadLetterEventService: DeadLetterEventsService = DeadLetterEventsServiceImpl(deadLetterEventRepository)
+    private val meterRegistry: MeterRegistry = mock(MeterRegistry::class.java)
+    private val deadLetterEventService: DeadLetterEventService = DeadLetterEventsServiceImpl(deadLetterEventRepository, meterRegistry)
 }

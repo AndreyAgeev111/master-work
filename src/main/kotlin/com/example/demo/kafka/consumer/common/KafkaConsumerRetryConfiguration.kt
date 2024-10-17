@@ -29,7 +29,7 @@ class KafkaConsumerConfig {
 
         errorHandler.setRetryListeners(
             { record, ex, deliveryAttempt ->
-                logger.error("Failed to process record with key ${record.key()}, attempt $deliveryAttempt: ${ex.message}")
+                logger.warn("Failed to process record with key ${record.key()}, attempt $deliveryAttempt: ${ex.message}")
             }
         )
 

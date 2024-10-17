@@ -2,7 +2,6 @@ package com.example.demo.controller
 
 import com.example.demo.controller.model.Product
 import com.example.demo.controller.model.error.ErrorResponse
-import com.example.demo.persistence.model.ProductModel
 import com.example.demo.service.ProductService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -41,8 +40,7 @@ class InternalProductControllerImpl(val service: ProductService) : InternalProdu
         ]
     )
     override fun listProducts(): List<Product> =
-        service.findProducts()
-            .map { Product(it) }
+        service.listProducts()
 
 
     @GetMapping(path = ["/{id}"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -67,7 +65,7 @@ class InternalProductControllerImpl(val service: ProductService) : InternalProdu
         ]
     )
     override fun getProductById(@PathVariable id: Int): Product =
-        Product(service.getProductById(id))
+        service.getProductById(id)
 
 
     @PostMapping(path = [""], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -88,7 +86,7 @@ class InternalProductControllerImpl(val service: ProductService) : InternalProdu
         ]
     )
     override fun upsertProduct(@RequestBody(required = true) product: Product) {
-        service.upsertProduct(ProductModel(product))
+        service.upsertProduct(product)
     }
 
     @PostMapping(path = ["/{id}/reserve"], produces = [MediaType.APPLICATION_JSON_VALUE])
