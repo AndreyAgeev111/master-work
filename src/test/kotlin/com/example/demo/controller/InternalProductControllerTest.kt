@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.util.*
 
-@WebMvcTest
+@WebMvcTest(InternalProductController::class)
 class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun whenGetProduct_thenReturnProductWithStatus200() {

@@ -9,5 +9,6 @@ import org.springframework.stereotype.Component
 @ConfigurationProperties("kafka.topics.products")
 data class ProductConfiguration(
     var topic: String = "",
-    var isSendToDeadLetterQueue: Boolean = true
+    var isSendToDeadLetterQueue: Boolean = true,
+    var deadLetterQueueLimit: Long = 100
 )

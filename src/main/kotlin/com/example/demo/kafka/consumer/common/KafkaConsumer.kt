@@ -17,6 +17,7 @@ abstract class KafkaConsumer<V>(
 ) {
     protected abstract val topic: String
     protected abstract val isSendToDeadLetterQueue: Boolean
+    protected abstract val deadLetterQueueLimit: Long
 
     protected abstract fun handleEvent(event: V)
 
@@ -34,7 +35,9 @@ abstract class KafkaConsumer<V>(
             logger.error("Event processing ended with an error", ex)
             failedToProcessEventsCounter.increment()
 
-            if (isSendToDeadLetterQueue) {
+            val deadLetterCurrentSize = deadLetterEventService.countEvents()
+
+            if (isSendToDeadLetterQueue && deadLetterQueueLimit > deadLetterCurrentSize) {
                 val currentDate = Instant.now()
                 val deadLetterEvent = DeadLetterEvent(
                     id = record.key(),

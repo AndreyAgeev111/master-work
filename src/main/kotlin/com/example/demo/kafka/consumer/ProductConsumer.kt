@@ -19,7 +19,8 @@ class ProductConsumer(
     deadLetterEventService: DeadLetterEventService
 ) : KafkaConsumer<ProductReserveEvent>(meterRegistry, deadLetterEventService) {
     override val topic: String = productConfiguration.topic
-    override val isSendToDeadLetterQueue = productConfiguration.isSendToDeadLetterQueue
+    override val isSendToDeadLetterQueue: Boolean = productConfiguration.isSendToDeadLetterQueue
+    override val deadLetterQueueLimit: Long = productConfiguration.deadLetterQueueLimit
 
     @KafkaListener(topics = ["\${kafka.topics.products.topic}"])
     override fun handle(record: ConsumerRecord<Int, ProductReserveEvent>, ack: Acknowledgment) {

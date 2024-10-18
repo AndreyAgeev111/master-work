@@ -10,4 +10,5 @@
     <include file="sets/MW-4-add-hstore-extension.sql" relativeToChangelogFile="true" />
     <include file="sets/MW-5-change-fields-type.sql" relativeToChangelogFile="true" />
     <include file="sets/MW-6-change-field-type.sql" relativeToChangelogFile="true" />
+    <include file="sets/MW-7-drop-default-type.sql" relativeToChangelogFile="true" />
 </databaseChangeLog>

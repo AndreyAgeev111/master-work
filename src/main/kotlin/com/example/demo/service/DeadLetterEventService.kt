@@ -18,6 +18,7 @@ interface DeadLetterEventService {
     fun listEvents(): List<DeadLetterEvent>
     fun deleteById(id: Int)
     fun upsertEvent(deadLetterEvent: DeadLetterEvent)
+    fun countEvents(): Long
 }
 
 @Service("deadLetterEventService")
@@ -41,6 +42,8 @@ class DeadLetterEventsServiceImpl(val db: DeadLetterEventRepository, meterRegist
             { db.insert(DeadLetterEventModel(deadLetterEvent)).also { eventCount.getAndIncrement() } }
         )
     }
+
+    override fun countEvents() = db.count()
 
     private fun getEvent(id: Int) = db.findById(id).getOrElse {
         logger.error("Event with id $id was not found")
