@@ -73,8 +73,19 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.withType<Jar> {
+    archiveBaseName.set("demo-app")
+    manifest {
+        attributes["Main-Class"] = "org.springframework.boot.loader.JarLauncher"
+    }
+}
+
 tasks.test {
     outputs.dir(project.extra["snippetsDir"]!!)
+}
+
+tasks.build {
+    dependsOn(tasks.jar)
 }
 
 tasks.asciidoctor {
