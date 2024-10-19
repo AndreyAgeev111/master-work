@@ -1,4 +1,4 @@
-# Laboratory for testing an architectural pattern for fault-tolerant message processing within the framework of interaction with message brokers
+# Software testing ground for testing an architectural pattern for fault-tolerant message processing within the framework of interaction with message brokers
 A project based on `Kotlin`, `Spring Boot`, `Quartz`, `Kafka`, `PostgreSQL`, `Prometheus`, `Grafana` and `Wiremock` with the ability to
 customize message processing scripts and conduct load testing with pre-prepared observability
 
