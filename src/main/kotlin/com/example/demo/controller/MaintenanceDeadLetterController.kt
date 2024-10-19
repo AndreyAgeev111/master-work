@@ -2,7 +2,9 @@ package com.example.demo.controller
 
 import com.example.demo.service.MaintenanceDeadLetterService
 import com.example.demo.controller.model.DeadLetterEvent
+import com.example.demo.controller.model.error.ErrorResponse
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -20,7 +22,8 @@ interface MaintenanceDeadLetterController {
 @RestController
 @RequestMapping("/api/v1/maintenance/dead-letter")
 @Tag(name = "Maintenance API")
-class MaintenanceDeadLetterControllerImpl(private val maintenanceDeadLetterService: MaintenanceDeadLetterService) : MaintenanceDeadLetterController {
+class MaintenanceDeadLetterControllerImpl(private val maintenanceDeadLetterService: MaintenanceDeadLetterService) :
+    MaintenanceDeadLetterController {
     @PostMapping(path = ["/{id}/retry"])
     @Operation(description = "Retries event processing from queue by id")
     @ApiResponses(
@@ -33,12 +36,12 @@ class MaintenanceDeadLetterControllerImpl(private val maintenanceDeadLetterServi
             ApiResponse(
                 responseCode = "417",
                 description = "Event processing ended with an error",
-                content = [Content()]
+                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
             ),
             ApiResponse(
                 responseCode = "422",
                 description = "Event not found",
-                content = [Content()]
+                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
             ),
             ApiResponse(
                 responseCode = "500",
@@ -63,7 +66,7 @@ class MaintenanceDeadLetterControllerImpl(private val maintenanceDeadLetterServi
             ApiResponse(
                 responseCode = "422",
                 description = "Event not found",
-                content = [Content()]
+                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
             ),
             ApiResponse(
                 responseCode = "500",
@@ -83,7 +86,7 @@ class MaintenanceDeadLetterControllerImpl(private val maintenanceDeadLetterServi
             ApiResponse(
                 responseCode = "200",
                 description = "OK",
-                content = [Content(schema = Schema(implementation = Array<DeadLetterEvent>::class))]
+                content = [Content(array = ArraySchema(schema = Schema(implementation = DeadLetterEvent::class)))]
             ),
             ApiResponse(
                 responseCode = "500",
