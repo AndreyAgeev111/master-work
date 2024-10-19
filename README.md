@@ -27,7 +27,7 @@ After receiving the event, the service sends a request to a certain `Warehouse` 
 
 For observability, a board was prepared in advance in Grafana with metrics for Kafka consumers, producers and a queue for messages with errors:
 
-![grafana board example](res/Grafana board example.png)
+![grafana board example](res/grafana.png)
 
 ## For local deploy
 
