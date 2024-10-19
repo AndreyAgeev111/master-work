@@ -1,6 +1,6 @@
 package com.example.demo.persistence.model
 
-import com.example.demo.service.model.DeadLetterEvent
+import com.example.demo.controller.model.DeadLetterEvent
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 import java.sql.Timestamp

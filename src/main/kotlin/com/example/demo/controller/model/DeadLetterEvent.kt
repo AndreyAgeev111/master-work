@@ -1,8 +1,10 @@
-package com.example.demo.service.model
+package com.example.demo.controller.model
 
 import com.example.demo.persistence.model.DeadLetterEventModel
+import io.swagger.v3.oas.annotations.media.Schema
 import java.time.Instant
 
+@Schema(description = "Model for event")
 data class DeadLetterEvent(
     val id: Int,
     val payload: String,

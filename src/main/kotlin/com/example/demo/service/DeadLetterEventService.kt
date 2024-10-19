@@ -3,7 +3,7 @@ package com.example.demo.service
 import com.example.demo.persistence.model.DeadLetterEventModel
 import com.example.demo.persistence.repository.DeadLetterEventRepository
 import com.example.demo.service.exception.EventNotFoundException
-import com.example.demo.service.model.DeadLetterEvent
+import com.example.demo.controller.model.DeadLetterEvent
 import io.micrometer.core.instrument.Gauge
 import io.micrometer.core.instrument.MeterRegistry
 import org.slf4j.LoggerFactory

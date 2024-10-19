@@ -5,8 +5,7 @@ import com.example.demo.kafka.model.ProductReserveEvent
 import com.example.demo.quartz.deadletter.configuration.CheckDeadLetterRetryConfiguration
 import com.example.demo.quartz.deadletter.util.TimeService
 import com.example.demo.service.DeadLetterEventService
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.quartz.JobExecutionContext
 import org.slf4j.LoggerFactory
@@ -20,6 +19,7 @@ class CheckDeadLetterEventJob(
     private val deadLetterEventService: DeadLetterEventService,
     private val productConsumerService: ProductConsumerService,
     private val timeService: TimeService,
+    private val jacksonObjectMapper: ObjectMapper,
     private val checkDeadLetterRetryConfiguration: CheckDeadLetterRetryConfiguration
 ) : QuartzJobBean() {
     override fun executeInternal(context: JobExecutionContext) {
@@ -29,7 +29,7 @@ class CheckDeadLetterEventJob(
             .filter {
                 currentTime.minus(getRetryIntervals()[it.currentAttempt - 1]).isAfter(it.updateDate) && it.currentAttempt < 12
             }
-            .map { jacksonObjectMapper().registerModules(JavaTimeModule()).readValue<ProductReserveEvent>(it.payload) }
+            .map { jacksonObjectMapper.readValue<ProductReserveEvent>(it.payload) }
             .map {
                 try {
                     productConsumerService.processEvent(it)

@@ -5,6 +5,7 @@ import com.example.demo.kafka.consumer.common.KafkaConsumer
 import com.example.demo.kafka.consumer.service.ProductConsumerService
 import com.example.demo.kafka.model.ProductReserveEvent
 import com.example.demo.service.DeadLetterEventService
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.micrometer.core.instrument.MeterRegistry
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
@@ -16,8 +17,9 @@ class ProductConsumer(
     private val productConsumerService: ProductConsumerService,
     productConfiguration: ProductConfiguration,
     meterRegistry: MeterRegistry,
-    deadLetterEventService: DeadLetterEventService
-) : KafkaConsumer<ProductReserveEvent>(meterRegistry, deadLetterEventService) {
+    deadLetterEventService: DeadLetterEventService,
+    jacksonObjectMapper: ObjectMapper,
+) : KafkaConsumer<ProductReserveEvent>(meterRegistry, deadLetterEventService, jacksonObjectMapper) {
     override val topic: String = productConfiguration.topic
     override val isSendToDeadLetterQueue: Boolean = productConfiguration.isSendToDeadLetterQueue
     override val deadLetterQueueLimit: Long = productConfiguration.deadLetterQueueLimit

@@ -1,9 +1,8 @@
 package com.example.demo.kafka.consumer.common
 
 import com.example.demo.service.DeadLetterEventService
-import com.example.demo.service.model.DeadLetterEvent
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.example.demo.controller.model.DeadLetterEvent
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -13,7 +12,8 @@ import java.time.Instant
 
 abstract class KafkaConsumer<V>(
     meterRegistry: MeterRegistry,
-    private val deadLetterEventService: DeadLetterEventService
+    private val deadLetterEventService: DeadLetterEventService,
+    private val jacksonObjectMapper: ObjectMapper,
 ) {
     protected abstract val topic: String
     protected abstract val isSendToDeadLetterQueue: Boolean
@@ -41,9 +41,7 @@ abstract class KafkaConsumer<V>(
                 val currentDate = Instant.now()
                 val deadLetterEvent = DeadLetterEvent(
                     id = record.key(),
-                    payload = jacksonObjectMapper()
-                        .registerModules(JavaTimeModule())
-                        .writeValueAsString(record.value()),
+                    payload = jacksonObjectMapper.writeValueAsString(record.value()),
                     createDate = currentDate,
                     updateDate = currentDate,
                     currentAttempt = 1
