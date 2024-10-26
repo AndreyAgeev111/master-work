@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "urlPattern": "/api/v1/warehouse/[^3]"
+    "urlPattern": "/api/v1/warehouse/(?!.*3).*"
   },
   "response": {
     "status": 200,
