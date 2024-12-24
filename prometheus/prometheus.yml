@@ -5,4 +5,4 @@ scrape_configs:
   - job_name: product-store-app
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: [192.168.0.107:8080] # hostname -I
+      - targets: [192.168.50.26:8080] # hostname -I
