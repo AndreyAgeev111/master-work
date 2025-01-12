@@ -38,7 +38,6 @@ class WarehouseClientTest {
     @Autowired
     lateinit var warehouseClient: WarehouseClient
 
-
     @Test
     fun whenUpdateProductInWarehouse_ReturnNothing() {
         val productId = 1
