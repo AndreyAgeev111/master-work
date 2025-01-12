@@ -1,10 +1,17 @@
+import org.w3c.dom.Element
+import javax.xml.parsers.DocumentBuilderFactory
+
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
+    id("org.jetbrains.kotlinx.kover") version "0.6.1"
     id("org.springframework.boot") version "3.3.3"
     id("io.spring.dependency-management") version "1.1.6"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
 }
+
+apply(from = "gradle/coloredTesting.gradle")
+apply(plugin = "org.jetbrains.kotlinx.kover")
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
@@ -91,4 +98,54 @@ tasks.build {
 tasks.asciidoctor {
     inputs.dir(project.extra["snippetsDir"]!!)
     dependsOn(tasks.test)
+}
+
+tasks.named("koverVerify").configure {
+    doLast {
+        val xmlFile = file("build/reports/kover/xml/report.xml")
+        if (!xmlFile.exists()) {
+            println("Coverage report not found. Ensure tests were executed and Kover is properly configured.")
+            return@doLast
+        }
+
+        val doc = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder()
+            .parse(xmlFile)
+
+        val counters = doc.getElementsByTagName("counter")
+        var totalLines = 0
+        var coveredLines = 0
+
+        for (i in 0 until counters.length) {
+            val counterNode = counters.item(i) as? Element ?: continue
+            if (counterNode.getAttribute("type") == "LINE") {
+                val missed = counterNode.getAttribute("missed").toIntOrNull() ?: 0
+                val covered = counterNode.getAttribute("covered").toIntOrNull() ?: 0
+                totalLines += missed + covered
+                coveredLines += covered
+            }
+        }
+
+        if (totalLines > 0) {
+            val lineCoverage = (coveredLines.toDouble() / totalLines) * 100
+            println("Test Coverage Results")
+            println("Line coverage: %.2f%%".format(lineCoverage))
+        }
+    }
+}
+
+kover {
+    xmlReport {
+        onCheck = true
+    }
+
+    verify {
+        rule {
+            isEnabled = true
+            name = "Coverage must be more than 60%"
+            bound {
+                minValue = 75
+            }
+        }
+    }
 }

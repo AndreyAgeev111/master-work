@@ -3,6 +3,8 @@ package com.example.demo.controller
 import com.example.demo.controller.model.Product
 import com.example.demo.persistence.model.ProductModel
 import com.example.demo.service.ProductService
+import com.example.demo.service.exception.ProductAlreadyReservedException
+import com.example.demo.service.exception.ProductNotFoundException
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -34,6 +36,17 @@ class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(1))
+    }
+
+    @Test
+    fun whenGetProduct_thenReturnNothingWithStatus422() {
+        val productId = 1
+
+        `when`(productService.getProductById(productId)).thenThrow(ProductNotFoundException::class.java)
+
+        mockMvc.perform(get("/api/v1/products/$productId"))
+            .andExpect(status().is4xxClientError)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
     }
 
     @Test
@@ -90,6 +103,32 @@ class InternalProductControllerTest(@Autowired val mockMvc: MockMvc) {
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
+    }
+
+    @Test
+    fun whenReserveProduct_thenReturnNothingWithStatus400() {
+        val productId = 1
+
+        `when`(productService.reserveProduct(productId)).thenThrow(ProductAlreadyReservedException::class.java)
+
+        mockMvc.perform(
+            post("/api/v1/products/$productId/reserve")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().is4xxClientError)
+    }
+
+    @Test
+    fun whenReserveProduct_thenReturnNothingWithStatus422() {
+        val productId = 1
+
+        `when`(productService.reserveProduct(productId)).thenThrow(ProductNotFoundException::class.java)
+
+        mockMvc.perform(
+            post("/api/v1/products/$productId/reserve")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().is4xxClientError)
     }
 
     @MockBean

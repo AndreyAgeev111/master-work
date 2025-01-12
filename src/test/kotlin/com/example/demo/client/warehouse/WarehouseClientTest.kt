@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.TestPropertySource
 import org.springframework.util.ResourceUtils
+import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import java.time.Instant
@@ -26,7 +27,6 @@ class WarehouseTestConfiguration {
         return configuration
     }
 }
-
 
 @SpringBootTest
 @Import(WarehouseTestConfiguration::class)
@@ -64,6 +64,63 @@ class WarehouseClientTest {
 
         val result = warehouseClient.updateProduct(productId, productUpdateRequest)
         Assertions.assertEquals(result, Unit)
+    }
+
+    @Test
+    fun whenUpdateProductInWarehouseWithNot500Exception_thenReturnNothing() {
+        val productId = 1
+        val date = Instant.now()
+        val productUpdateRequest = ProductUpdateRequest(
+            name = null,
+            price = null,
+            isAvailable = false,
+            description = null,
+            updateDate = date
+        )
+        val path = "/api/v1/warehouse/$productId"
+        `when`(
+            warehouseRestTemplateConfiguration.postForObject(
+                UriComponentsBuilder
+                    .fromHttpUrl(baseUrl)
+                    .path(path)
+                    .build()
+                    .toUri(),
+                productUpdateRequest,
+                Unit::class.java
+            )
+        ).thenThrow(RestClientResponseException("Some error", 404, "Not Found", null, null, null))
+
+        val result = warehouseClient.updateProduct(productId, productUpdateRequest)
+        Assertions.assertEquals(result, Unit)
+    }
+
+    @Test
+    fun whenUpdateProductInWarehouseWith500Exception_thenThrowException() {
+        val productId = 1
+        val date = Instant.now()
+        val productUpdateRequest = ProductUpdateRequest(
+            name = null,
+            price = null,
+            isAvailable = false,
+            description = null,
+            updateDate = date
+        )
+        val path = "/api/v1/warehouse/$productId"
+        `when`(
+            warehouseRestTemplateConfiguration.postForObject(
+                UriComponentsBuilder
+                    .fromHttpUrl(baseUrl)
+                    .path(path)
+                    .build()
+                    .toUri(),
+                productUpdateRequest,
+                Unit::class.java
+            )
+        ).thenThrow(RestClientResponseException("Some error", 500, "Internal Server Error", null, null, null))
+
+        Assertions.assertThrows(RestClientResponseException::class.java) {
+            warehouseClient.updateProduct(productId, productUpdateRequest)
+        }
     }
 
     private val baseUrl = "http://localhost:8443"

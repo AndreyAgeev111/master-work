@@ -1,0 +1,90 @@
+tasks.withType(Test).configureEach {
+    String ANSI_BOLD_WHITE = "\u001B[01m"
+    String ANSI_RESET = "\u001B[0m"
+    String ANSI_RED = "\u001B[31m"
+    String ANSI_GREEN = "\u001B[32m"
+    String ANSI_YELLOW = "\u001B[33m"
+    String ANSI_WHITE = "\u001B[37m"
+    String CHECK_MARK = "\u2713"
+    String NEUTRAL_FACE = "\u0CA0_\u0CA0"
+    String X_MARK = "\u274C"
+
+    testLogging {
+        exceptionFormat = "short"
+        displayGranularity = 3
+    }
+
+    doFirst {
+        println 'Running tests'
+    }
+
+    doLast {
+        println 'Tests completed'
+    }
+
+    beforeSuite { suite ->
+        if (suite.name.startsWith("Test Run") || suite.name.startsWith("Gradle Worker")) return
+
+        if (suite.parent != null && suite.className != null) {
+            out.println(ANSI_BOLD_WHITE + suite.name + ANSI_RESET)
+        }
+
+    }
+
+    beforeTest { descriptor ->
+        out.println(descriptor.displayName)
+    }
+
+    afterTest { descriptor, result ->
+        def indicator = ANSI_WHITE
+
+        if (result.failedTestCount > 0) indicator = ANSI_RED + X_MARK
+        else if (result.skippedTestCount > 0) indicator = ANSI_YELLOW + NEUTRAL_FACE
+        else indicator = ANSI_GREEN + CHECK_MARK
+
+        out.println('    ' + indicator + ANSI_RESET + " " + descriptor.name)
+
+        if (result.failedTestCount > 0) {
+            out.println(' ')
+        }
+
+    }
+
+    afterSuite { desc, result ->
+        if (desc.parent != null && desc.className != null) {
+            out.println("")
+        }
+
+
+        if (!desc.parent) { // will match the outermost suite
+            def failStyle = ANSI_RED
+            def skipStyle = ANSI_YELLOW
+            def summaryStyle = ANSI_WHITE
+            if (result.failedTestCount > 0) {
+                failStyle = ANSI_RED
+            }
+            if (result.skippedTestCount > 0) {
+                skipStyle = ANSI_YELLOW
+            }
+
+            switch (result.resultType) {
+                case TestResult.ResultType.SUCCESS:
+                    summaryStyle = ANSI_GREEN
+                    break
+                case TestResult.ResultType.FAILURE:
+                    summaryStyle = ANSI_RED
+                    break
+            }
+
+            out.println("--------------------------------------------------------------------------")
+            out.println("Results: " + summaryStyle + "${result.resultType}" + ANSI_RESET
+                    + " (${result.testCount} tests, "
+                    + ANSI_GREEN + "${result.successfulTestCount} passed" + ANSI_RESET
+                    + ", " + failStyle + "${result.failedTestCount} failed" + ANSI_RESET
+                    + ", " + skipStyle + "${result.skippedTestCount} skipped" + ANSI_RESET
+                    + ")")
+            out.println("--------------------------------------------------------------------------")
+        }
+    }
+
+}
