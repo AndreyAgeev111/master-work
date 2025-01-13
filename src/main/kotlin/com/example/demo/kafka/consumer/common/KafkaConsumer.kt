@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.kafka.support.Acknowledgment
 import java.time.Instant
 
-abstract class KafkaConsumer<V>(
+abstract class KafkaConsumer<V, T>(
     meterRegistry: MeterRegistry,
     private val deadLetterEventService: DeadLetterEventService,
     private val jacksonObjectMapper: ObjectMapper,

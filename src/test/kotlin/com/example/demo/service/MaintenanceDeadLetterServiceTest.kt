@@ -6,7 +6,7 @@ import com.example.demo.controller.model.DeadLetterEvent
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.mockito.Mockito.*
 import java.time.Instant
 import kotlin.test.Test
@@ -34,7 +34,7 @@ class MaintenanceDeadLetterServiceTest {
 
         verify(deadLetterEventService, atLeastOnce()).getEventById(eventId)
         verify(productConsumerService, atLeastOnce()).processEvent(reserveEvent)
-        Assertions.assertEquals(result, Unit)
+        assertEquals(Unit, result)
     }
 
     @Test
@@ -43,7 +43,7 @@ class MaintenanceDeadLetterServiceTest {
         val result = maintenanceDeadLetterService.deleteEventById(eventId)
 
         verify(deadLetterEventService, atLeastOnce()).deleteById(eventId)
-        Assertions.assertEquals(result, Unit)
+        assertEquals(Unit, result)
     }
 
     @Test
@@ -66,7 +66,7 @@ class MaintenanceDeadLetterServiceTest {
         val result = maintenanceDeadLetterService.listEvents()
 
         verify(deadLetterEventService, atLeastOnce()).listEvents()
-        Assertions.assertEquals(result[0].id, event.id)
+        assertEquals(event.id, result[0].id)
     }
 
     private val deadLetterEventService: DeadLetterEventService = mock(DeadLetterEventService::class.java)

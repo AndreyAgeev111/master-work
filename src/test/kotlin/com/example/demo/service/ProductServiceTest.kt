@@ -6,7 +6,7 @@ import com.example.demo.persistence.model.ProductModel
 import com.example.demo.persistence.repository.ProductRepository
 import com.example.demo.service.exception.ProductAlreadyReservedException
 import com.example.demo.service.exception.ProductNotFoundException
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import java.util.*
@@ -35,8 +35,8 @@ class ProductServiceTest {
         val resultProducts: List<Product> = productService.listProducts()
 
         verify(productRepository, atLeastOnce()).findAll()
-        Assertions.assertEquals(resultProducts.size, products.size)
-        Assertions.assertEquals(resultProducts.first().price, products.first().price)
+        assertEquals(resultProducts.size, products.size)
+        assertEquals(resultProducts.first().price, products.first().price)
     }
 
     @Test
@@ -48,7 +48,7 @@ class ProductServiceTest {
         val resultProducts: List<Product> = productService.listProducts()
 
         verify(productRepository, atLeastOnce()).findAll()
-        Assertions.assertTrue(resultProducts.isEmpty())
+        assertTrue(resultProducts.isEmpty())
     }
 
     @Test
@@ -58,7 +58,7 @@ class ProductServiceTest {
 
         `when`(productRepository.findById(productId)).thenReturn(emptyProduct)
 
-        Assertions.assertThrows(ProductNotFoundException::class.java) {
+        assertThrows(ProductNotFoundException::class.java) {
             productService.getProductById(productId)
         }
     }
@@ -79,7 +79,7 @@ class ProductServiceTest {
         val resultProduct: Product = productService.getProductById(productId)
 
         verify(productRepository, atLeastOnce()).findById(productId)
-        Assertions.assertEquals(resultProduct.name, product.name)
+        assertEquals(resultProduct.name, product.name)
     }
 
     @Test
@@ -97,7 +97,7 @@ class ProductServiceTest {
         val result = productService.upsertProduct(Product(product))
 
         verify(productRepository, atLeastOnce()).save(product)
-        Assertions.assertEquals(result, Unit)
+        assertEquals(Unit, result)
     }
 
     @Test
@@ -117,7 +117,7 @@ class ProductServiceTest {
 
         verify(productRepository, atLeastOnce()).findById(productId)
         verify(productRepository, atLeastOnce()).save(product.copy(isAvailable = false))
-        Assertions.assertEquals(result, Unit)
+        assertEquals(Unit, result)
     }
 
     @Test
@@ -127,7 +127,7 @@ class ProductServiceTest {
 
         `when`(productRepository.findById(productId)).thenReturn(emptyProduct)
 
-        Assertions.assertThrows(ProductNotFoundException::class.java) {
+        assertThrows(ProductNotFoundException::class.java) {
             productService.reserveProduct(productId)
         }
     }
@@ -145,7 +145,7 @@ class ProductServiceTest {
 
         `when`(productRepository.findById(productId)).thenReturn(Optional.of(product))
 
-        Assertions.assertThrows(ProductAlreadyReservedException::class.java) {
+        assertThrows(ProductAlreadyReservedException::class.java) {
             productService.reserveProduct(productId)
         }
     }

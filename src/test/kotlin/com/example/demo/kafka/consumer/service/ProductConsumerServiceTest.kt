@@ -3,7 +3,7 @@ package com.example.demo.kafka.consumer.service
 import com.example.demo.client.warehouse.model.ProductUpdateRequest
 import com.example.demo.kafka.model.ProductReserveEvent
 import com.example.demo.service.WarehouseService
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.mockito.Mockito.*
 import kotlin.test.Test
 
@@ -25,7 +25,7 @@ class ProductConsumerServiceTest {
         val result = productConsumerService.processEvent(productReserveEvent)
 
         verify(warehouseService, atLeastOnce()).updateProduct(productReserveEvent.productId, productUpdateRequest)
-        Assertions.assertEquals(result, Unit)
+        assertEquals(Unit, result)
     }
 
     private val warehouseService: WarehouseService = mock(WarehouseService::class.java)

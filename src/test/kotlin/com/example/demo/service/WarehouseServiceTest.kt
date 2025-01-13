@@ -2,7 +2,7 @@ package com.example.demo.service
 
 import com.example.demo.client.warehouse.WarehouseClient
 import com.example.demo.client.warehouse.model.ProductUpdateRequest
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.mockito.Mockito.*
 import org.springframework.web.client.RestClientException
 import java.time.Instant
@@ -24,7 +24,7 @@ class WarehouseServiceTest {
         val result = warehouseService.updateProduct(productId, productUpdateRequest)
 
         verify(warehouseClient, atLeastOnce()).updateProduct(productId, productUpdateRequest)
-        Assertions.assertEquals(result, Unit)
+        assertEquals(Unit, result)
     }
 
     @Test
@@ -41,7 +41,7 @@ class WarehouseServiceTest {
 
         `when`(warehouseClient.updateProduct(productId, productUpdateRequest)).thenThrow(RestClientException::class.java)
 
-        Assertions.assertThrows(RestClientException::class.java) {
+        assertThrows(RestClientException::class.java) {
             warehouseService.updateProduct(productId, productUpdateRequest)
         }
     }

@@ -19,7 +19,7 @@ class ProductConsumer(
     meterRegistry: MeterRegistry,
     deadLetterEventService: DeadLetterEventService,
     jacksonObjectMapper: ObjectMapper,
-) : KafkaConsumer<ProductReserveEvent>(meterRegistry, deadLetterEventService, jacksonObjectMapper) {
+) : KafkaConsumer<ProductReserveEvent, Any?>(meterRegistry, deadLetterEventService, jacksonObjectMapper) {
     override val topic: String = productConfiguration.topic
     override val isSendToDeadLetterQueue: Boolean = productConfiguration.isSendToDeadLetterQueue
     override val deadLetterQueueLimit: Long = productConfiguration.deadLetterQueueLimit

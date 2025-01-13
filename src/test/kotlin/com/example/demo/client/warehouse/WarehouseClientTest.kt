@@ -2,7 +2,7 @@ package com.example.demo.client.warehouse
 
 import com.example.demo.client.warehouse.config.WarehouseConfiguration
 import com.example.demo.client.warehouse.model.ProductUpdateRequest
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -63,7 +63,7 @@ class WarehouseClientTest {
         ).thenReturn(Unit)
 
         val result = warehouseClient.updateProduct(productId, productUpdateRequest)
-        Assertions.assertEquals(result, Unit)
+        assertEquals(Unit, result)
     }
 
     @Test
@@ -91,7 +91,7 @@ class WarehouseClientTest {
         ).thenThrow(RestClientResponseException("Some error", 404, "Not Found", null, null, null))
 
         val result = warehouseClient.updateProduct(productId, productUpdateRequest)
-        Assertions.assertEquals(result, Unit)
+        assertEquals(Unit, result)
     }
 
     @Test
@@ -118,7 +118,7 @@ class WarehouseClientTest {
             )
         ).thenThrow(RestClientResponseException("Some error", 500, "Internal Server Error", null, null, null))
 
-        Assertions.assertThrows(RestClientResponseException::class.java) {
+        assertThrows(RestClientResponseException::class.java) {
             warehouseClient.updateProduct(productId, productUpdateRequest)
         }
     }

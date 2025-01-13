@@ -2,7 +2,7 @@ package com.example.demo.persistence.repository
 
 import com.example.demo.persistence.model.ProductModel
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
@@ -34,7 +34,7 @@ class ProductRepositoryTest {
         productRepository.deleteAll()
 
         if (product != null) {
-            Assertions.assertEquals(product.name, expectedProduct.name)
+            assertEquals(expectedProduct.name, product.name)
         }
     }
 
@@ -53,7 +53,7 @@ class ProductRepositoryTest {
         val product = productRepository.findById(expectedProductId ).get()
         productRepository.deleteAll()
 
-        Assertions.assertEquals(product.name, expectedProduct.name)
+        assertEquals(expectedProduct.name, product.name)
     }
 
     @Test
@@ -79,7 +79,7 @@ class ProductRepositoryTest {
         val product = productRepository.save(secondExpectedProduct)
         productRepository.deleteAll()
 
-        Assertions.assertEquals(product.price, secondExpectedProduct.price)
-        Assertions.assertEquals(product.name, secondExpectedProduct.name)
+        assertEquals(secondExpectedProduct.price, product.price)
+        assertEquals(secondExpectedProduct.name, product.name)
     }
 }

@@ -5,7 +5,7 @@ import com.example.demo.persistence.repository.DeadLetterEventRepository
 import com.example.demo.service.exception.EventNotFoundException
 import com.example.demo.controller.model.DeadLetterEvent
 import io.micrometer.core.instrument.MeterRegistry
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import java.time.Instant
@@ -19,7 +19,7 @@ class DeadLetterServiceTest {
 
         `when`(deadLetterEventRepository.findById(eventId)).thenReturn(emptyProduct)
 
-        Assertions.assertThrows(EventNotFoundException::class.java) {
+        assertThrows(EventNotFoundException::class.java) {
             deadLetterEventService.getEventById(eventId)
         }
     }
@@ -42,7 +42,7 @@ class DeadLetterServiceTest {
         val resultEvent: DeadLetterEvent = deadLetterEventService.getEventById(eventId)
 
         verify(deadLetterEventRepository, atLeastOnce()).findById(eventId)
-        Assertions.assertEquals(resultEvent.currentAttempt, event.currentAttempt)
+        assertEquals(event.currentAttempt, resultEvent.currentAttempt)
     }
 
     @Test
@@ -62,7 +62,7 @@ class DeadLetterServiceTest {
         val result = deadLetterEventService.upsertEvent(event)
 
         verify(deadLetterEventRepository, atLeastOnce()).save(model)
-        Assertions.assertEquals(result, Unit)
+        assertEquals(Unit, result)
     }
 
     private val deadLetterEventRepository: DeadLetterEventRepository = mock(DeadLetterEventRepository::class.java)

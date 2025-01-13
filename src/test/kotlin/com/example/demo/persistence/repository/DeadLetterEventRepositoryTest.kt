@@ -1,8 +1,7 @@
 package com.example.demo.persistence.repository
 
 import com.example.demo.persistence.model.DeadLetterEventModel
-import com.example.demo.persistence.model.ProductModel
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
@@ -35,7 +34,7 @@ class DeadLetterEventRepositoryTest {
         val expectedEventId = deadLetterEventRepository.findAll().iterator().next().id
         deadLetterEventRepository.deleteAll()
 
-        Assertions.assertEquals(expectedEvent.id, expectedEventId)
+        assertEquals(expectedEventId, expectedEvent.id)
     }
 
     @Test
@@ -53,6 +52,6 @@ class DeadLetterEventRepositoryTest {
         val event = deadLetterEventRepository.findById(expectedEventId).get()
         deadLetterEventRepository.deleteAll()
 
-        Assertions.assertEquals(event.currentAttempt, expectedEvent.currentAttempt)
+        assertEquals(expectedEvent.currentAttempt, event.currentAttempt)
     }
 }
