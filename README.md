@@ -22,6 +22,8 @@ Since ordering products may hypothetically require several actions at once, when
 To avoid this, an asynchronous pattern with `Kafka` was used. 
 After receiving the event, the service sends a request to a certain `Warehouse` service to reserve the required product and only after a successful response commits the message in the queue, after which the business process can be considered complete (in our case, a mocked `HTTP` server, which specifically responds to some requests with a `5xx` error, thereby simulating failures).
 
+![uml](res/uml.png)
+
 ## Observation
 
 For observability, a board was prepared in advance in `Grafana` with metrics for `Kafka` consumers, producers and a queue for messages with errors:
