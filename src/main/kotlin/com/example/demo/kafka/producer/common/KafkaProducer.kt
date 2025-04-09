@@ -12,12 +12,12 @@ abstract class KafkaProducer<K : Any, T>(
     protected abstract val topic: String
 
     fun send(key: K, event: T) {
-        try {
+        runCatching {
             kafkaTemplate.send(topic, key, event)
 
             logger.info("Event with key = $key sent")
             sentEventsCounter.increment()
-        } catch (ex: Exception) {
+        }.onFailure { ex ->
             logger.error("Event sending ended with an error", ex)
             failedToSentEventsCounter.increment()
 

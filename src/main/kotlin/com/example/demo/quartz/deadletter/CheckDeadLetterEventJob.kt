@@ -31,10 +31,10 @@ class CheckDeadLetterEventJob(
             }
             .map { jacksonObjectMapper.readValue<ProductReserveEvent>(it.payload) }
             .map {
-                try {
+                runCatching {
                     productConsumerService.processEvent(it)
                     logger.info("Event with id = ${it.productId} processed successfully")
-                } catch (ex: Exception) {
+                }.onFailure { ex ->
                     deadLetterEventService.getEventById(it.productId)
                         .let { event ->
                             deadLetterEventService.upsertEvent(

@@ -2,11 +2,16 @@ import org.w3c.dom.Element
 import javax.xml.parsers.DocumentBuilderFactory
 
 plugins {
+    // Kotlin
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
-    id("org.jetbrains.kotlinx.kover") version "0.6.1"
+
+    // Spring Boot
     id("org.springframework.boot") version "3.3.3"
     id("io.spring.dependency-management") version "1.1.6"
+
+    // Coverage & Docs
+    id("org.jetbrains.kotlinx.kover") version "0.6.1"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
 }
 
@@ -36,28 +41,48 @@ extra["snippetsDir"] = file("build/generated-snippets")
 extra["springCloudVersion"] = "2023.0.3"
 
 dependencies {
+    // Spring Boot Starters
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-quartz")
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    // OpenAPI
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+
+    // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.8")
+
+    // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    // Database & Migrations
     implementation("org.liquibase:liquibase-core")
-    implementation("org.springframework.kafka:spring-kafka")
-    compileOnly("org.projectlombok:lombok")
-    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-    runtimeOnly("io.micrometer:micrometer-registry-prometheus")
     runtimeOnly("org.postgresql:postgresql")
+
+    // Kafka
+    implementation("org.springframework.kafka:spring-kafka")
+
+    // Micrometer
+    runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+
+    // Dev Tools
+    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+
+    // Lombok
+    compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
+
+    // Spring Configuration Processor
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    // Tests
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:kafka")
@@ -81,7 +106,7 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.withType<Jar> {
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     archiveBaseName.set("demo-app")
     manifest {
         attributes["Main-Class"] = "org.springframework.boot.loader.JarLauncher"

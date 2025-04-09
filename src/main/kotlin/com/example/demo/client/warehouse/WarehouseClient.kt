@@ -32,13 +32,17 @@ class WarehouseClientImpl(
     }
 
     private fun handleWith5xxError(f: () -> Unit) {
-        try {
+        runCatching {
             run(f)
-        } catch (e: RestClientResponseException) {
-            if (e.statusCode.is5xxServerError) {
-                throw e
-            } else {
-                logger.error("received HTTP response with status ${e.statusCode}", e)
+        }.onFailure { e ->
+            when(e) {
+                is RestClientResponseException -> {
+                    if (e.statusCode.is5xxServerError) {
+                        throw e
+                    } else {
+                        logger.error("received HTTP response with status ${e.statusCode}", e)
+                    }
+                }
             }
         }
     }

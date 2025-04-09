@@ -25,13 +25,13 @@ abstract class KafkaConsumer<V, T>(
         logger.info("Event with key = ${record.key()} received: [${record.value()}]")
         receivedEventsCounter.increment()
 
-        try {
+        runCatching {
             handleEvent(record.value())
             ack.acknowledge()
 
             logger.info("Event processed")
             processedEventsCounter.increment()
-        } catch (ex: Exception) {
+        }.onFailure { ex ->
             logger.error("Event processing ended with an error", ex)
             failedToProcessEventsCounter.increment()
 

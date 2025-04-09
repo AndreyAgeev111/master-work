@@ -21,13 +21,13 @@ class MaintenanceDeadLetterServiceImpl(
     private val jacksonObjectMapper: ObjectMapper
 ) : MaintenanceDeadLetterService {
     override fun retryEventProcessing(id: Int) {
-        try {
+        runCatching {
             deadLetterEventService.getEventById(id)
                 .let {
                     jacksonObjectMapper.readValue<ProductReserveEvent>(it.payload)
                 }
                 .let { productConsumerService.processEvent(it) }
-        } catch (ex: Exception) {
+        }.onFailure  {
             throw EventProcessingFailedException(id)
         }
     }
