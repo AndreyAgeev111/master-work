@@ -168,7 +168,7 @@ kover {
     verify {
         rule {
             isEnabled = true
-            name = "Coverage must be more than 60%"
+            name = "Coverage must be more than 75%"
             bound {
                 minValue = 75
             }
