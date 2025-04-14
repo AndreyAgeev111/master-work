@@ -1,3 +1,5 @@
+version: '3.7'
+
 services:
   postgres:
     image: postgres:latest
@@ -6,7 +8,8 @@ services:
       - POSTGRES_PASSWORD=secret
       - POSTGRES_USER=myuser
     ports:
-      - 5432:5432
+      - "5432:5432"
+
   wiremock:
     image: wiremock/wiremock:latest
     volumes:
@@ -14,7 +17,8 @@ services:
         source: ./wiremock/warehouse
         target: /home/wiremock/mappings
     ports:
-      - 8443:8080
+      - "8443:8080"
+
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -22,14 +26,15 @@ services:
         source: ./prometheus/prometheus.yml
         target: /etc/prometheus/prometheus.yml
     ports:
-      - 9090:9090
+      - "9090:9090"
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus
+
   grafana:
     image: grafana/grafana:latest
     ports:
-      - 3000:3000
+      - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
@@ -43,22 +48,60 @@ services:
       - type: bind
         source: ./grafana/dashboards
         target: /var/lib/grafana/dashboards
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 22181:2181
+      - "22181:2181"
+
   kafka:
     image: confluentinc/cp-kafka:latest
     depends_on:
       - zookeeper
     ports:
-      - 29092:29092
+      - "29092:29092"
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.17.4
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.17.4
+    container_name: logstash
+    ports:
+      - "5044:5044"
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logs:/logs
+    depends_on:
+      - elasticsearch
+
+volumes:
+  esdata:
