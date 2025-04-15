@@ -48,6 +48,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-quartz")
     implementation("org.springframework.boot:spring-boot-starter-web")
 
+    // Logging
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
+
     // OpenAPI
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 
@@ -70,10 +73,6 @@ dependencies {
 
     // Dev Tools
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-
-    // Lombok
-    compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
 
     // Spring Configuration Processor
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")

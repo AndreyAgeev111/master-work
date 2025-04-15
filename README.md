@@ -60,9 +60,22 @@ Run:
 
 ## After deploy
 
-|            |                                        |
-|------------|----------------------------------------|
-| Swagger    | http://localhost:8080/docs             |
-| Grafana    | http://localhost:3000                  |
-| Prometheus | http://localhost:9090                  |
-| WireMock   | http://localhost:8443/__admin/mappings |
+|               |                                                  |
+|---------------|--------------------------------------------------|
+| Swagger       | http://localhost:8080/docs                       |
+| Grafana       | http://localhost:3000                            |
+| Prometheus    | http://localhost:9090                            |
+| WireMock      | http://localhost:8443/__admin/mappings           |
+| WireMock      | http://localhost:8443/__admin/mappings           |
+| ElasticSearch | http://localhost:5601/app/observability/overview |
+
+## Filebeat Configuration Permissions
+
+To ensure correct permissions for `filebeat.yml` configuration file, run the following commands to revert the changes:
+
+```bash
+sudo chown root:root ./filebeat/filebeat.yml
+sudo chmod 644 ./filebeat/filebeat.yml
+```
+
+This will restore the correct permissions for Filebeat to access and modify the `filebeat.yml` configuration file.
