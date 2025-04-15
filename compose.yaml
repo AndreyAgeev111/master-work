@@ -103,5 +103,14 @@ services:
     depends_on:
       - elasticsearch
 
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.17.4
+    user: root
+    volumes:
+      - ./logs:/logs
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+    depends_on:
+      - logstash
+
 volumes:
   esdata:
