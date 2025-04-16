@@ -66,7 +66,6 @@ Run:
 | Grafana       | http://localhost:3000                            |
 | Prometheus    | http://localhost:9090                            |
 | WireMock      | http://localhost:8443/__admin/mappings           |
-| WireMock      | http://localhost:8443/__admin/mappings           |
 | ElasticSearch | http://localhost:5601/app/observability/overview |
 
 ## Filebeat Configuration Permissions
